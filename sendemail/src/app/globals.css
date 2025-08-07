@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+
+@font-face {
+  font-family: 'Parkinsans';
+  src: url('../fonts/Parkinsans-VariableFont_wght.ttf')
+}
+
+body {
+  font-family: 'Parkinsans', 'Times New Roman';
+}
+
+#hiddenScroll::-webkit-scrollbar {
+  display: none;
+}
