@@ -2,12 +2,13 @@
 
 import React from 'react';
 import Botao from '../shared/Botao';
-import { IconDataBase, IconKeyToken, IconLetter, IconVisibleEmail } from '../Icons/IconsIndex';
+import { IconBook, IconDataBase, IconKeyToken, IconLetter, IconVisibleEmail } from '../Icons/IconsIndex';
 
 interface ActionsProps {
     gerarToken: () => void;
     visualizar?: () => void;
     ConsultarApi: () => void
+    cadastrar: () => void;
 }
 
 export default function Actions(props: ActionsProps) {
@@ -48,6 +49,15 @@ export default function Actions(props: ActionsProps) {
                 active:border-b-[2px] active:brightness-90 active:translate-y-[2px]
             `} executar={props.visualizar}
                 > {IconVisibleEmail} <span className='ml-2'>Visualizar</span></Botao>
+
+                <Botao
+                    className={` flex h-12
+                cursor-pointer transition-all bg-emerald-500 text-white px-6 py-3 rounded-lg
+                border-emerald-600
+                border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]
+                active:border-b-[2px] active:brightness-90 active:translate-y-[2px]
+            `} executar={props.cadastrar}
+                > {IconBook} <span className='ml-2'>Cadastrar</span></Botao>
 
             </div>
         </div>

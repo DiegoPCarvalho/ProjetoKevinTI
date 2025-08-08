@@ -6,15 +6,26 @@ import Layout from '@/components/template/Layout';
 import React, { useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import ModalCads from '@/components/shared/ModalCads';
+import FormularioCadastroVendedor from '@/components/shared/Formulario';
+import TabelaVendedor from '@/components/shared/TabelaVendedores';
+import { FormCadsVendedor, initialFormCadsVendedorDefault } from '@/interfaces/FormCadsVendedor';
+import { buscarLocal, salvarLocal } from '@/functions/Localstorage';
 
-const dadosPessoais = [
-  {nome: "PAULA POLEDESNIK", email: "paula.polesdenik"}
-]
 
 export default function Home() {
 
   const [token, setToken] = useState<string | null>(null);
   const [banco, setBanco] = useState<any>([]);
+  const [openCads, setOpenCads] = useState<boolean>(false);
+  const [vendedores, setVendedores] = useState<any>([]);
+  const [formVendedores, setFormVendedores] = useState<FormCadsVendedor>(initialFormCadsVendedorDefault)
+
+  function carregarVendedores() {
+    const vendedoresLocal = buscarLocal('vendedores') || [];
+    return setVendedores(vendedoresLocal);
+  }
+
 
   async function gerarToken() {
     try {
@@ -34,6 +45,8 @@ export default function Home() {
     }
   }
 
+  const abrirFecharCads = () => setOpenCads(!openCads);
+
   async function ConsultarApi() {
     try {
 
@@ -46,19 +59,19 @@ export default function Home() {
         //   const dadosDoVendedor = dadosApi.filter(
         //     item => item.VENDEDOR === pessoa.nome
         //   );
-        
+
         //   return {
         //     ...pessoa,
         //     dados: dadosDoVendedor,
         //   };
         // });
-        
+
         // console.log(resultado);
 
         console.log(data);
 
         toast.success('Dados obtidos com sucesso!');
-      }else {
+      } else {
         toast.error('Por favor, gere um token primeiro!');
         return;
       }
@@ -74,10 +87,58 @@ export default function Home() {
     }
   }
 
+  function salvarVendedor() {
+    try {
+      if (formVendedores.nome === '' || formVendedores.email === '') {
+        return;
+      } else {
+
+        const vendedoresLocal = buscarLocal('vendedores') || [];
+
+        const id: number = Math.floor(Math.random() * 1635255454);
+
+        formVendedores.id = id;
+
+        vendedoresLocal.push(formVendedores);
+
+        salvarLocal('vendedores', vendedoresLocal);
+
+        setVendedores(vendedoresLocal);
+
+        limparVendedor()
+      }
+    } catch (error: any) {
+      console.log("Preencha os Campos")
+    }
+  }
+
+  function editarVendedor(vendedor: FormCadsVendedor) {
+    setFormVendedores(vendedor);
+    const vendedoresLocal = buscarLocal('vendedores') || [];
+    const atualizarLista = vendedoresLocal.filter((v: FormCadsVendedor) => v.id !== vendedor.id);
+    salvarLocal('vendedores', atualizarLista);
+    setVendedores(atualizarLista);   
+  }
+
+  function excuirVendedor(vendedor: FormCadsVendedor) {
+    const vendedoresLocal = buscarLocal('vendedores') || [];
+    const atualizarLista = vendedoresLocal.filter((v: FormCadsVendedor) => v.id !== vendedor.id);
+    salvarLocal('vendedores', atualizarLista);
+    setVendedores(atualizarLista);
+  }
+
+  function limparVendedor() {
+    return setFormVendedores(initialFormCadsVendedorDefault);
+  }
+
   return (
     <Layout>
-      <Cards banco={banco}/>
-      <Actions gerarToken={gerarToken} ConsultarApi={ConsultarApi} />
+      <Cards banco={banco} />
+      <Actions gerarToken={gerarToken} ConsultarApi={ConsultarApi} cadastrar={abrirFecharCads} />
+      <ModalCads carregarVendedores={carregarVendedores} open={openCads} close={abrirFecharCads}>
+        <FormularioCadastroVendedor limparVendedor={limparVendedor} formVendedores={formVendedores} setFormVendedores={setFormVendedores} salvarVendedor={salvarVendedor} />
+        <TabelaVendedor excluirVendedor={excuirVendedor} vendedores={vendedores} editarVendedor={editarVendedor}/>
+      </ModalCads>
     </Layout>
   );
 }
