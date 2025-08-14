@@ -9,6 +9,7 @@ interface ActionsProps {
     visualizar?: () => void;
     ConsultarApi: () => void
     cadastrar: () => void;
+    enviarAllEmails: () => void;
 }
 
 export default function Actions(props: ActionsProps) {
@@ -40,6 +41,7 @@ export default function Actions(props: ActionsProps) {
                 border-b-[4px] hover:brightness-110 hover:-translate-y-[1px] hover:border-b-[6px]
                 active:border-b-[2px] active:brightness-90 active:translate-y-[2px]
             `}
+                executar={props.enviarAllEmails}
                 > {IconLetter} <span className='ml-2'>Enviar E-mails</span></Botao>
                 <Botao
                     className={` flex h-12

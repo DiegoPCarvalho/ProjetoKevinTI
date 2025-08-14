@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
 
     const headers = [
       'CLIENTE', 'EQUIPAMENTO', 'NS', 'QTDA', 'INICIO', 'RETORNO',
-      'NF', 'PEDIDO', 'VENDEDOR', 'NFD', 'OBSC'
+      'NF', 'PEDIDO', 'VENDEDOR', 'NFD', 'STATUS','OBSC'
     ];
 
     function excelDateToJSDate(serial: number): string {
@@ -54,10 +54,7 @@ export async function GET(request: NextRequest) {
     });
 
     const dadoFiltrado = result.filter(
-      resp =>
-        resp.VENDEDOR !== '-' &&
-        resp.VENDEDOR !== '' &&
-        resp.VENDEDOR.trim() !== ''
+      resp => resp.STATUS === 'EM USO NO CLIENTE' 
     );
 
     return NextResponse.json(dadoFiltrado);

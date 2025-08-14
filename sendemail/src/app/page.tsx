@@ -12,7 +12,6 @@ import TabelaVendedor from '@/components/shared/TabelaVendedores';
 import { FormCadsVendedor, initialFormCadsVendedorDefault } from '@/interfaces/FormCadsVendedor';
 import { buscarLocal, salvarLocal } from '@/functions/Localstorage';
 
-
 export default function Home() {
 
   const [token, setToken] = useState<string | null>(null);
@@ -20,6 +19,7 @@ export default function Home() {
   const [openCads, setOpenCads] = useState<boolean>(false);
   const [vendedores, setVendedores] = useState<any>([]);
   const [formVendedores, setFormVendedores] = useState<FormCadsVendedor>(initialFormCadsVendedorDefault)
+  const [carregando, setCarregando] = useState<boolean>(false);
 
   function carregarVendedores() {
     const vendedoresLocal = buscarLocal('vendedores') || [];
@@ -49,26 +49,29 @@ export default function Home() {
 
   async function ConsultarApi() {
     try {
+      setCarregando(true);
 
       if (token !== null) {
         const { data } = await axios.get(`/api/table?token=${token}`)
 
-        // setBanco(data);
+        const dadosPessoais = buscarLocal('vendedores') || [];
 
-        // const resultado = dadosPessoais.map(pessoa => {
-        //   const dadosDoVendedor = dadosApi.filter(
-        //     item => item.VENDEDOR === pessoa.nome
-        //   );
+        const resultado = dadosPessoais.map((pessoa: any) => {
+          const dadosDoVendedor = data.filter(
+            (item: any) => item.VENDEDOR === pessoa.nome
+          );
 
-        //   return {
-        //     ...pessoa,
-        //     dados: dadosDoVendedor,
-        //   };
-        // });
+          return {
+            ...pessoa,
+            dados: dadosDoVendedor,
+          };
+        });
 
-        // console.log(resultado);
-
+        console.log(resultado);
         console.log(data);
+
+        setBanco(resultado);
+        setCarregando(false);
 
         toast.success('Dados obtidos com sucesso!');
       } else {
@@ -84,6 +87,8 @@ export default function Home() {
         console.error('Erro inesperado:', error);
         toast.error('Erro inesperado ao consultar a API');
       }
+    } finally {
+      setCarregando(false);
     }
   }
 
@@ -117,7 +122,7 @@ export default function Home() {
     const vendedoresLocal = buscarLocal('vendedores') || [];
     const atualizarLista = vendedoresLocal.filter((v: FormCadsVendedor) => v.id !== vendedor.id);
     salvarLocal('vendedores', atualizarLista);
-    setVendedores(atualizarLista);   
+    setVendedores(atualizarLista);
   }
 
   function excuirVendedor(vendedor: FormCadsVendedor) {
@@ -131,13 +136,35 @@ export default function Home() {
     return setFormVendedores(initialFormCadsVendedorDefault);
   }
 
+  function enviarTodosEmails(){
+    try{ 
+      console.log(banco)
+      if(banco.length === 0){
+        toast.error('Nenhum dado para enviar e-mail!')
+        return;
+      }
+    }catch(error:any){
+      
+    }
+  }
+
+  function enviarEmailVendedor(dados: any){
+    try{ 
+      console.log(dados)
+    }catch(error:any){
+
+    }
+  }
+
+
+
   return (
     <Layout>
-      <Cards banco={banco} />
-      <Actions gerarToken={gerarToken} ConsultarApi={ConsultarApi} cadastrar={abrirFecharCads} />
+      <Cards enviar={enviarEmailVendedor} banco={banco} carregando={carregando}/>
+      <Actions enviarAllEmails={enviarTodosEmails} gerarToken={gerarToken} ConsultarApi={ConsultarApi} cadastrar={abrirFecharCads} />
       <ModalCads carregarVendedores={carregarVendedores} open={openCads} close={abrirFecharCads}>
         <FormularioCadastroVendedor limparVendedor={limparVendedor} formVendedores={formVendedores} setFormVendedores={setFormVendedores} salvarVendedor={salvarVendedor} />
-        <TabelaVendedor excluirVendedor={excuirVendedor} vendedores={vendedores} editarVendedor={editarVendedor}/>
+        <TabelaVendedor excluirVendedor={excuirVendedor} vendedores={vendedores} editarVendedor={editarVendedor} />
       </ModalCads>
     </Layout>
   );
