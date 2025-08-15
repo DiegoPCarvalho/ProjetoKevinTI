@@ -14,7 +14,7 @@ export default function ModalCads(props: ModalCadsProps) {
 
     useEffect(() => {
         props.carregarVendedores();
-    }, [])
+    }, [props.open === true])
 
 
     return (
