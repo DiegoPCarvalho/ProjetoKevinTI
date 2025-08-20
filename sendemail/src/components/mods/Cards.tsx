@@ -12,7 +12,7 @@ interface CardsProps {
 export default function Cards(props: CardsProps) {
 
     return (
-        <div id="hiddenScroll"  className={`w-[80%] flex ${props.carregando ? 'justify-center items-center' : 'flex-wrap'} overflow-auto h-[600px] max-xl:h-[470px]`}>
+        <div id="hiddenScroll"  className={`w-[80%] flex ${props.carregando ? 'justify-center' : 'flex-wrap'} overflow-auto h-[600px] max-xl:h-[470px] items-center`}>
             {props.carregando ? (
                 <div className='flex flex-col justify-center items-center'>
                     <CircularProgress color={'success'} size={350} />

@@ -7,15 +7,9 @@ interface ModalCadsProps {
     open?: boolean
     close?: () => void
     className?: string
-    carregarVendedores: () => void
 }
 
-export default function ModalCads(props: ModalCadsProps) {
-
-    useEffect(() => {
-        props.carregarVendedores();
-    }, [props.open === true])
-
+export default function ModalVisualizar(props: ModalCadsProps) {
 
     return (
         <>
@@ -28,7 +22,7 @@ export default function ModalCads(props: ModalCadsProps) {
                 >
                     <div className="bg-sky-700 p-2 rounded-t-lg text-xl flex justify-between">
                         <span className="font-bold text-neutral-100">
-                            Cadastro Vendedores
+                            E-mail
                         </span>
                         <button
                             className=" text-xl font-bold cursor-pointer text-neutral-100 hover:text-neutral-300"

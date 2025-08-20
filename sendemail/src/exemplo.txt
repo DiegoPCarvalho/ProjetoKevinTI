@@ -1,0 +1,144 @@
+const Authortization = "eyJ0eXAiOiJKV1QiLCJub25jZSI6ImxaUzExczJsVy1BSGY1LVpZU1FjbzJLZDNmcFB3cno3YkhkX2tIQlRIYW8iLCJhbGciOiJSUzI1NiIsIng1dCI6IkpZaEFjVFBNWl9MWDZEQmxPV1E3SG4wTmVYRSIsImtpZCI6IkpZaEFjVFBNWl9MWDZEQmxPV1E3SG4wTmVYRSJ9.eyJhdWQiOiJodHRwczovL2dyYXBoLm1pY3Jvc29mdC5jb20iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC84ZDFlZTVlNS1hNmZhLTRiZTUtYTk0MC0xYzdmZTMyOGU2NzEvIiwiaWF0IjoxNzU0NTc5MzA5LCJuYmYiOjE3NTQ1NzkzMDksImV4cCI6MTc1NDU4MzIwOSwiYWlvIjoiazJSZ1lOQ1dkaEV1dWY2NmVySmhYbWhTVmVNeEFBPT0iLCJhcHBfZGlzcGxheW5hbWUiOiJMZWl0b3JHcmFwaEV4Y2VsIiwiYXBwaWQiOiI4MDc1OTkzNS0zNDQ3LTRhNDktYjViZi1hYzhkYzBkZmQ0M2YiLCJhcHBpZGFjciI6IjEiLCJpZHAiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC84ZDFlZTVlNS1hNmZhLTRiZTUtYTk0MC0xYzdmZTMyOGU2NzEvIiwiaWR0eXAiOiJhcHAiLCJvaWQiOiIzNTc3NjA4Ny1mOTU0LTQwYWEtYmExNy05ZjAzNjBiNTFkMDAiLCJyaCI6IjEuQVh3QTVlVWVqZnFtNVV1cFFCeF80eWptY1FNQUFBQUFBQUFBd0FBQUFBQUFBQUM3QUFCOEFBLiIsInJvbGVzIjpbIlNpdGVzLlJlYWQuQWxsIiwiRmlsZXMuUmVhZFdyaXRlLkFsbCIsIk1haWwuU2VuZCJdLCJzdWIiOiIzNTc3NjA4Ny1mOTU0LTQwYWEtYmExNy05ZjAzNjBiNTFkMDAiLCJ0ZW5hbnRfcmVnaW9uX3Njb3BlIjoiU0EiLCJ0aWQiOiI4ZDFlZTVlNS1hNmZhLTRiZTUtYTk0MC0xYzdmZTMyOGU2NzEiLCJ1dGkiOiI4Qmk4azRSYWNrV2lFV3lDS2k4NkFBIiwidmVyIjoiMS4wIiwid2lkcyI6WyIwOTk3YTFkMC0wZDFkLTRhY2ItYjQwOC1kNWNhNzMxMjFlOTAiXSwieG1zX2Z0ZCI6Imo2bzZ4aFFocWtkRmI1TVgzUE4wMVdOa2N2YkdVWDVPN3VlNWNxVDJpeUFCZFhObFlYTjBMV1J6YlhNIiwieG1zX2lkcmVsIjoiNyAxNCIsInhtc19yZCI6IjAuNDJMbFlCSmlyQkVTNFdBWEVuamZXVDFueDRRSXQzM1ppMExfejlyOUZDaktLU1F3LWNfQ21yTTM4dHhXTEZVTHVsT3dlQTVRbEVOSWdKa0JBZzVBYVFBIiwieG1zX3RjZHQiOjE2Nzk0NDQwNDR9.ZmPmrsD6trdl_sjWlYCpAnQsecHliUSjhpEwM5OouXRkgGSYLHx19rZL1vXCxA1e-20EdSLgLjJ6nmQftYH5tQVhBAlnsipOs8zv7jS71dm4jZCNALAihV0AH0Ofi5vZSB21NfTDCtV1hfqpfYFPypU1HN1nL9eW3vpYzdO0vVxCdIoXMG0395rm8Mccfof3qF5-6M6UDpHqP1Mz2NbIL6lp6pg1nNgWy5rnhUZWaijgbd64Tey3Pui6RDZ0jmTgf6Dq1OUtNnFi4dN_7Oxq2U_VRKHBeJN3qgfyMMW6FJaFRiqwPeFkcYJRuSvvsITfSNlVR3ZC-mNi1L4c8FLjRg"
+ 
+const axios = require('axios');
+ 
+const url = 'https://graph.microsoft.com/v1.0/sites/3932955e-9618-4862-8aae-5c291379335a/drive/items/0124MTTVZ7OTEADWGGVZEJYV56Z3FQAXRC/workbook/tables/Tabela2/rows';
+ 
+ 
+async function dados() {
+  try {
+    const { data } = await axios.get(url, {
+      headers: {
+        'Authorization': `Bearer ${Authortization}`,
+        // 'Content-Type': 'application/json'
+      }
+    })
+ 
+    const dadosIniciais = data.value
+ 
+    const dadoFinal = []
+ 
+    dadosIniciais.map(resp => {
+      resp.values.map(resp2 => {
+        dadoFinal.push(resp2)
+      })
+    })
+ 
+    const headers = [
+      'CLIENTE',
+      'EQUIPAMENTO',
+      'NS',
+      'QTDA',
+      'INICIO',
+      'RETORNO',
+      'NF',
+      'PEDIDO',
+      'VENDEDOR',
+      'NFD',
+      'OBSC'
+    ]
+ 
+  function excelDateToJSDate(value) {
+  if (typeof value === 'number') {
+    const utc_days = Math.floor(value - 257569);
+    const utc_value = utc_days * 86400;
+    const date_info = new Date(utc_value * 1000);
+    const day = String(date_info.getUTCDate()).padStart(2, '0');
+    const month = String(date_info.getUTCMonth() + 1).padStart(2, '0');
+    const year = date_info.getUTCFullYear();
+    return `${day}/${month}/${year}`;
+  } else if (typeof value === 'string' && value.includes('/')) {
+    // Já está no formato "dd/mm/yyyy"
+    return value;
+  } else {
+    return ''; // Caso estranho ou vazio
+  }
+}
+ 
+    // 👇 Conversão
+    const result = dadoFinal.map(row => {
+      return headers.reduce((obj, header, index) => {
+        if (header === 'DATA1' || header === 'DATA2') {
+          obj[header] = excelDateToJSDate(row[index]);
+        } else {
+          obj[header] = row[index];
+        }
+        return obj;
+      }, {});
+    });
+ 
+    const dadoFiltrado = result.filter(resp => resp.VENDEDOR !== "-" | "" | " ")
+ 
+    const tabelaHTML =  `
+  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">
+    <thead>
+      <tr>
+        <th>CLIENTE</th>
+        <th>EQUIPAMENTO</th>
+        <th>NS</th>
+        <th>QTDA</th>
+        <th>DATA INICIO</th>
+        <th>DATA RETORNO</th>
+        <th>QTDA DIAS</th>
+        <th>NF</th>
+        <th>PEDIDO</th>
+        <th>VENDEDOR</th>
+        <th>NFD</th>
+        <th>OBSC</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${dadoFiltrado.map(resp => `
+        <tr>
+          <td>${resp.CLIENTE}</td>
+          <td>${resp.EQUIPAMENTO}</td>
+          <td>${resp.NS}</td>
+          <td>${resp.QTDA}</td>
+          <td>${resp.INICIO}</td>
+          <td>${resp.RETORNO}</td>
+          <td>${resp.INICIO} d</td>
+          <td>${resp.NF}</td>
+          <td>${resp.PEDIDO}</td>
+          <td>${resp.VENDEDOR}</td>
+          <td>${resp.NFD}</td>
+          <td>${resp.OBSC}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  </table>
+`;
+ 
+    const emailBody = {
+      message: {
+        subject: "Relatório automático dos equipamentos",
+        body: {
+          contentType: "HTML",
+          content: tabelaHTML
+        },
+        toRecipients: [
+          {
+            emailAddress: {
+              address: 'kevin.pimentel@zhaz.com.br' //Destinatario
+            }
+          }
+        ]
+      },
+      saveToSentItems: "true"
+    };
+ 
+    axios.post('https://graph.microsoft.com/v1.0/users/kevin.pimentel@zhaz.com.br/sendMail', emailBody, {
+      headers: {
+        Authorization: `Bearer ${"eyJ0eXAiOiJKV1QiLCJub25jZSI6ImxaUzExczJsVy1BSGY1LVpZU1FjbzJLZDNmcFB3cno3YkhkX2tIQlRIYW8iLCJhbGciOiJSUzI1NiIsIng1dCI6IkpZaEFjVFBNWl9MWDZEQmxPV1E3SG4wTmVYRSIsImtpZCI6IkpZaEFjVFBNWl9MWDZEQmxPV1E3SG4wTmVYRSJ9.eyJhdWQiOiJodHRwczovL2dyYXBoLm1pY3Jvc29mdC5jb20iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC84ZDFlZTVlNS1hNmZhLTRiZTUtYTk0MC0xYzdmZTMyOGU2NzEvIiwiaWF0IjoxNzU0NTc5MzA5LCJuYmYiOjE3NTQ1NzkzMDksImV4cCI6MTc1NDU4MzIwOSwiYWlvIjoiazJSZ1lOQ1dkaEV1dWY2NmVySmhYbWhTVmVNeEFBPT0iLCJhcHBfZGlzcGxheW5hbWUiOiJMZWl0b3JHcmFwaEV4Y2VsIiwiYXBwaWQiOiI4MDc1OTkzNS0zNDQ3LTRhNDktYjViZi1hYzhkYzBkZmQ0M2YiLCJhcHBpZGFjciI6IjEiLCJpZHAiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC84ZDFlZTVlNS1hNmZhLTRiZTUtYTk0MC0xYzdmZTMyOGU2NzEvIiwiaWR0eXAiOiJhcHAiLCJvaWQiOiIzNTc3NjA4Ny1mOTU0LTQwYWEtYmExNy05ZjAzNjBiNTFkMDAiLCJyaCI6IjEuQVh3QTVlVWVqZnFtNVV1cFFCeF80eWptY1FNQUFBQUFBQUFBd0FBQUFBQUFBQUM3QUFCOEFBLiIsInJvbGVzIjpbIlNpdGVzLlJlYWQuQWxsIiwiRmlsZXMuUmVhZFdyaXRlLkFsbCIsIk1haWwuU2VuZCJdLCJzdWIiOiIzNTc3NjA4Ny1mOTU0LTQwYWEtYmExNy05ZjAzNjBiNTFkMDAiLCJ0ZW5hbnRfcmVnaW9uX3Njb3BlIjoiU0EiLCJ0aWQiOiI4ZDFlZTVlNS1hNmZhLTRiZTUtYTk0MC0xYzdmZTMyOGU2NzEiLCJ1dGkiOiI4Qmk4azRSYWNrV2lFV3lDS2k4NkFBIiwidmVyIjoiMS4wIiwid2lkcyI6WyIwOTk3YTFkMC0wZDFkLTRhY2ItYjQwOC1kNWNhNzMxMjFlOTAiXSwieG1zX2Z0ZCI6Imo2bzZ4aFFocWtkRmI1TVgzUE4wMVdOa2N2YkdVWDVPN3VlNWNxVDJpeUFCZFhObFlYTjBMV1J6YlhNIiwieG1zX2lkcmVsIjoiNyAxNCIsInhtc19yZCI6IjAuNDJMbFlCSmlyQkVTNFdBWEVuamZXVDFueDRRSXQzM1ppMExfejlyOUZDaktLU1F3LWNfQ21yTTM4dHhXTEZVTHVsT3dlQTVRbEVOSWdKa0JBZzVBYVFBIiwieG1zX3RjZHQiOjE2Nzk0NDQwNDR9.ZmPmrsD6trdl_sjWlYCpAnQsecHliUSjhpEwM5OouXRkgGSYLHx19rZL1vXCxA1e-20EdSLgLjJ6nmQftYH5tQVhBAlnsipOs8zv7jS71dm4jZCNALAihV0AH0Ofi5vZSB21NfTDCtV1hfqpfYFPypU1HN1nL9eW3vpYzdO0vVxCdIoXMG0395rm8Mccfof3qF5-6M6UDpHqP1Mz2NbIL6lp6pg1nNgWy5rnhUZWaijgbd64Tey3Pui6RDZ0jmTgf6Dq1OUtNnFi4dN_7Oxq2U_VRKHBeJN3qgfyMMW6FJaFRiqwPeFkcYJRuSvvsITfSNlVR3ZC-mNi1L4c8FLjRg"}`,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(() => console.log("E-mail enviado com sucesso!"))
+      .catch(error => console.error("Erro ao enviar e-mail:", error.response?.data || error));
+ 
+  } catch (error) {
+    console.log(error.message)
+  }
+ 
+}
+ 
+dados()

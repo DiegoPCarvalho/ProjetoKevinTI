@@ -40,7 +40,7 @@ export default function FormularioCadastroVendedor(props: FormVendedoresProps) {
                         required
                     />
                 </div>
-                <div className='flex justify-between items-end'>
+                <div className='flex justify-end items-end'>
                     <Botao
                         className={`
                             h-12

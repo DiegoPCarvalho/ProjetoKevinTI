@@ -9,7 +9,7 @@ interface ActionsProps {
     visualizar?: () => void;
     ConsultarApi: () => void
     cadastrar: () => void;
-    enviarAllEmails: () => void;
+    // enviarAllEmails: () => void;
 }
 
 export default function Actions(props: ActionsProps) {
@@ -34,7 +34,7 @@ export default function Actions(props: ActionsProps) {
             `}
                 executar={props.ConsultarApi}
                 > {IconDataBase} <span className='ml-2'>Consultar API</span></Botao>
-                <Botao
+                {/* <Botao
                     className={` flex h-12
                 cursor-pointer transition-all bg-emerald-500 text-white px-6 py-3 rounded-lg
                 border-emerald-600
@@ -42,7 +42,7 @@ export default function Actions(props: ActionsProps) {
                 active:border-b-[2px] active:brightness-90 active:translate-y-[2px]
             `}
                 executar={props.enviarAllEmails}
-                > {IconLetter} <span className='ml-2'>Enviar E-mails</span></Botao>
+                > {IconLetter} <span className='ml-2'>Enviar E-mails</span></Botao> */}
                 <Botao
                     className={` flex h-12
                 cursor-pointer transition-all bg-emerald-500 text-white px-6 py-3 rounded-lg

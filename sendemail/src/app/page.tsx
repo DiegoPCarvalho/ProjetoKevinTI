@@ -10,16 +10,22 @@ import ModalCads from '@/components/shared/ModalCads';
 import FormularioCadastroVendedor from '@/components/shared/Formulario';
 import TabelaVendedor from '@/components/shared/TabelaVendedores';
 import { FormCadsVendedor, initialFormCadsVendedorDefault } from '@/interfaces/FormCadsVendedor';
+import ModalVisualizar from '@/components/shared/ModalVisualizar';
+import EmailVisualizado from '@/components/mods/EmailVisualizado';
+import { buscarLocalSimples, salvarLocalSimples } from '@/functions/Localstorage';
+import EmailGerado from '@/components/shared/EmailGerado';
 
 export default function Home() {
 
   const [token, setToken] = useState<string | null>(null);
   const [banco, setBanco] = useState<any>([]);
   const [openCads, setOpenCads] = useState<boolean>(false);
+  const [openVisu, setOpenVisu] = useState<boolean>(false);
   const [vendedores, setVendedores] = useState<any>([]);
   const [formVendedores, setFormVendedores] = useState<FormCadsVendedor>(initialFormCadsVendedorDefault)
   const [carregando, setCarregando] = useState<boolean>(false);
   const [edit, setEdit] = useState<boolean>(false);
+  const [mensagemEmail, setMensagemEmail] = useState<string>('');
 
   async function carregarVendedores() {
     try {
@@ -51,6 +57,7 @@ export default function Home() {
   }
 
   const abrirFecharCads = () => setOpenCads(!openCads);
+  const abrirFecharVisu = () => setOpenVisu(!openVisu);
 
   async function ConsultarApi() {
     try {
@@ -71,9 +78,6 @@ export default function Home() {
             dados: dadosDoVendedor,
           };
         });
-
-        console.log(resultado);
-        console.log(data);
 
         setBanco(resultado);
         setCarregando(false);
@@ -170,34 +174,115 @@ export default function Home() {
     setVendedores(list)
   }
 
-  function enviarTodosEmails() {
-    try {
-      console.log(banco)
-      if (banco.length === 0) {
-        toast.error('Nenhum dado para enviar e-mail!')
-        return;
-      }
-    } catch (error: any) {
 
+  function atualizarlistaVendedoresSend(vendendor: FormCadsVendedor, add = true) {
+    const list = vendedores.filter((v: FormCadsVendedor) => v.nome !== vendendor.nome);
+    if (add) list.push(vendendor);
+    setBanco(list)
+  }
+
+  function enviarEmailVendedor(dado: any) {
+    try {
+
+        const tabelaHTML = EmailGerado(mensagemEmail, dado.dados)
+
+        console.log(tabelaHTML)
+
+        // const emailBody = {
+        //   message: {
+        //     subject: "Relatório automático dos equipamentos",
+        //     body: {
+        //       contentType: "HTML",
+        //       content: tabelaHTML
+        //     },
+        //     toRecipients: [
+        //       {
+        //         emailAddress: {
+        //           address: dado.email //Destinatario
+        //         }
+        //       }
+        //     ]
+        //   },
+        //   saveToSentItems: "true"
+        // };
+
+        // axios.post('https://graph.microsoft.com/v1.0/users/kevin.pimentel@zhaz.com.br/sendMail', emailBody, {
+        //   headers: {
+        //     Authorization: `${token}`,
+        //     'Content-Type': 'application/json'
+        //   }
+        // })
+        //   .then(() => toast.success("E-mail enviado com sucesso!"))
+        //   .catch(error => toast.error("Erro ao enviar e-mail:", error.response?.data || error))
+
+        atualizarlistaVendedoresSend(dado, false)
+
+    } catch (error: any) {
+      toast.error('Erro inesperado: ' + error.message);
     }
   }
 
-  function enviarEmailVendedor(dados: any) {
-    try {
-      console.log(dados)
-    } catch (error: any) {
-
-    }
+  function buscarDadoMensagem() {
+    const valor = buscarLocalSimples("mensagemEmail")
+    setMensagemEmail(valor)
   }
+
+  function salvarMensagem() {
+    salvarLocalSimples("mensagemEmail", mensagemEmail)
+    abrirFecharVisu()
+  }
+
+  // function enviarTodosEmails() {
+  //   try {
+
+  //     for (let i = 0; i < banco.length; i++) {
+  //       const tabelaHTML = EmailGerado(mensagemEmail, banco[i].dados)
+
+  //       const emailBody = {
+  //         message: {
+  //           subject: "Relatório automático dos equipamentos",
+  //           body: {
+  //             contentType: "HTML",
+  //             content: tabelaHTML
+  //           },
+  //           toRecipients: [
+  //             {
+  //               emailAddress: {
+  //                 address: banco[i].email //Destinatario
+  //               }
+  //             }
+  //           ]
+  //         },
+  //         saveToSentItems: "true"
+  //       };
+
+  //       axios.post('https://graph.microsoft.com/v1.0/users/kevin.pimentel@zhaz.com.br/sendMail', emailBody, {
+  //         headers: {
+  //           Authorization: `${token}`,
+  //           'Content-Type': 'application/json'
+  //         }
+  //       })
+  //         .then(() => toast.success("E-mail enviado com sucesso!"))
+  //         .catch(error => toast.error("Erro ao enviar e-mail:", error.response?.data || error));
+  //     }
+
+
+  //   } catch (error: any) {
+  //     toast.error('Erro inesperado: ' + error.message);
+  //   }
+  // }
 
   return (
     <Layout>
-      <Cards enviar={enviarEmailVendedor} banco={banco} carregando={carregando} />
-      <Actions enviarAllEmails={enviarTodosEmails} gerarToken={gerarToken} ConsultarApi={ConsultarApi} cadastrar={abrirFecharCads} />
+      <Cards banco={banco} carregando={carregando} enviar={enviarEmailVendedor} />
+      <Actions gerarToken={gerarToken} ConsultarApi={ConsultarApi} cadastrar={abrirFecharCads} visualizar={abrirFecharVisu} />
       <ModalCads carregarVendedores={carregarVendedores} open={openCads} close={abrirFecharCads}>
         <FormularioCadastroVendedor limparVendedor={limparVendedor} formVendedores={formVendedores} setFormVendedores={setFormVendedores} salvarVendedor={edit ? editarVendedor : salvarVendedor} />
         <TabelaVendedor excluirVendedor={excuirVendedor} vendedores={vendedores} editarVendedor={loadVendedor} />
       </ModalCads>
+      <ModalVisualizar open={openVisu} close={abrirFecharVisu}>
+        <EmailVisualizado salvar={salvarMensagem} buscar={buscarDadoMensagem} cancelar={abrirFecharVisu} valor={mensagemEmail} mudarCampo={setMensagemEmail} />
+      </ModalVisualizar>
     </Layout>
   );
 }
