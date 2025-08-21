@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import Card from '../shared/Card';
 import CircularProgress from '@mui/material/CircularProgress';
 interface CardsProps {

@@ -19,7 +19,6 @@ export default function EmailVisualizado(props: EmailVisualizadoProps) {
         props.buscar()
     }, [])
 
-
     return (
         <div>
             <div className='flex flex-col mb-5'>

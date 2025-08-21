@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Botao from '../shared/Botao';
-import { IconBook, IconDataBase, IconKeyToken, IconLetter, IconVisibleEmail } from '../Icons/IconsIndex';
+import { IconBook, IconDataBase, IconKeyToken, IconVisibleEmail } from '../Icons/IconsIndex';
 
 interface ActionsProps {
     gerarToken: () => void;

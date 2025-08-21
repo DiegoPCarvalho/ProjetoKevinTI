@@ -146,7 +146,7 @@ export default function Home() {
 
   async function excuirVendedor(vendedor: FormCadsVendedor) {
     try {
-      await axios.delete('/api/vendedores', { data: { id: vendedor.id } }).then(res => {
+      await axios.delete('/api/vendedores', { data: { id: vendedor.id } }).then((_) => {
         const list = atualizarlistaVendedores(vendedor, false)
         setVendedores(list)
       });
@@ -176,7 +176,7 @@ export default function Home() {
 
 
   function atualizarlistaVendedoresSend(vendendor: FormCadsVendedor, add = true) {
-    const list = vendedores.filter((v: FormCadsVendedor) => v.nome !== vendendor.nome);
+    const list = banco.filter((v: FormCadsVendedor) => v.nome !== vendendor.nome);
     if (add) list.push(vendendor);
     setBanco(list)
   }
@@ -186,34 +186,41 @@ export default function Home() {
 
         const tabelaHTML = EmailGerado(mensagemEmail, dado.dados)
 
-        console.log(tabelaHTML)
+        if (!token) {
+          toast.error('Por favor, gere um token primeiro!');
+          return;
+        }
+        if (!dado.email) {
+          toast.error('O vendedor não possui um e-mail cadastrado!');
+          return;
+        }
+        
+        const emailBody = {
+          message: {
+            subject: "Relatório automático dos equipamentos",
+            body: {
+              contentType: "HTML",
+              content: tabelaHTML
+            },
+            toRecipients: [
+              {
+                emailAddress: {
+                  address: dado.email //Destinatario
+                }
+              }
+            ]
+          },
+          saveToSentItems: "true"
+        };
 
-        // const emailBody = {
-        //   message: {
-        //     subject: "Relatório automático dos equipamentos",
-        //     body: {
-        //       contentType: "HTML",
-        //       content: tabelaHTML
-        //     },
-        //     toRecipients: [
-        //       {
-        //         emailAddress: {
-        //           address: dado.email //Destinatario
-        //         }
-        //       }
-        //     ]
-        //   },
-        //   saveToSentItems: "true"
-        // };
-
-        // axios.post('https://graph.microsoft.com/v1.0/users/kevin.pimentel@zhaz.com.br/sendMail', emailBody, {
-        //   headers: {
-        //     Authorization: `${token}`,
-        //     'Content-Type': 'application/json'
-        //   }
-        // })
-        //   .then(() => toast.success("E-mail enviado com sucesso!"))
-        //   .catch(error => toast.error("Erro ao enviar e-mail:", error.response?.data || error))
+        axios.post('https://graph.microsoft.com/v1.0/users/kevin.pimentel@zhaz.com.br/sendMail', emailBody, {
+          headers: {
+            Authorization: `${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
+          .then(() => toast.success("E-mail enviado com sucesso!"))
+          .catch(error => toast.error("Erro ao enviar e-mail:", error.response?.data || error));
 
         atualizarlistaVendedoresSend(dado, false)
 
@@ -232,45 +239,6 @@ export default function Home() {
     abrirFecharVisu()
   }
 
-  // function enviarTodosEmails() {
-  //   try {
-
-  //     for (let i = 0; i < banco.length; i++) {
-  //       const tabelaHTML = EmailGerado(mensagemEmail, banco[i].dados)
-
-  //       const emailBody = {
-  //         message: {
-  //           subject: "Relatório automático dos equipamentos",
-  //           body: {
-  //             contentType: "HTML",
-  //             content: tabelaHTML
-  //           },
-  //           toRecipients: [
-  //             {
-  //               emailAddress: {
-  //                 address: banco[i].email //Destinatario
-  //               }
-  //             }
-  //           ]
-  //         },
-  //         saveToSentItems: "true"
-  //       };
-
-  //       axios.post('https://graph.microsoft.com/v1.0/users/kevin.pimentel@zhaz.com.br/sendMail', emailBody, {
-  //         headers: {
-  //           Authorization: `${token}`,
-  //           'Content-Type': 'application/json'
-  //         }
-  //       })
-  //         .then(() => toast.success("E-mail enviado com sucesso!"))
-  //         .catch(error => toast.error("Erro ao enviar e-mail:", error.response?.data || error));
-  //     }
-
-
-  //   } catch (error: any) {
-  //     toast.error('Erro inesperado: ' + error.message);
-  //   }
-  // }
 
   return (
     <Layout>

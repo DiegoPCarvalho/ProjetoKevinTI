@@ -19,7 +19,7 @@ export async function GET() {
     try {
         const data = readData();
         return NextResponse.json(data, { status: 200 });
-      } catch (error) {
+      } catch (error: any) {
         return NextResponse.json({ error: 'Erro ao ler os dados' }, { status: 500 });
       }
 }
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
       writeData(data);
   
       return NextResponse.json(novo, { status: 201 });
-    } catch (error) {
+    } catch (error: any) {
       return NextResponse.json({ error: 'Erro ao adicionar vendedor' }, { status: 500 });
     }
   }
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
       writeData(data);
   
       return NextResponse.json(data[index], { status: 200 });
-    } catch (error) {
+    } catch (error: any) {
       return NextResponse.json({ error: 'Erro ao atualizar vendedor' }, { status: 500 });
     }
   }
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
       writeData(novoData);
   
       return NextResponse.json({ message: 'Vendedor removido com sucesso' }, { status: 200 });
-    } catch (error) {
+    } catch (error: any) {
       return NextResponse.json({ error: 'Erro ao deletar vendedor' }, { status: 500 });
     }
   }

@@ -14,7 +14,7 @@ interface TabelaVendedorProps {
 export default function TabelaVendedor(props: TabelaVendedorProps) {
 
     function intercalado(i: number) {
-        let resultado = i % 2
+        const resultado = i % 2
 
         return resultado === 1 ? "bg-neutral-400 text-white" : "text-black"
     }

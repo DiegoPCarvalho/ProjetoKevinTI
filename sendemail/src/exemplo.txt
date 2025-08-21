@@ -142,3 +142,43 @@ async function dados() {
 }
  
 dados()
+
+ // function enviarTodosEmails() {
+  //   try {
+
+  //     for (let i = 0; i < banco.length; i++) {
+  //       const tabelaHTML = EmailGerado(mensagemEmail, banco[i].dados)
+
+  //       const emailBody = {
+  //         message: {
+  //           subject: "Relatório automático dos equipamentos",
+  //           body: {
+  //             contentType: "HTML",
+  //             content: tabelaHTML
+  //           },
+  //           toRecipients: [
+  //             {
+  //               emailAddress: {
+  //                 address: banco[i].email //Destinatario
+  //               }
+  //             }
+  //           ]
+  //         },
+  //         saveToSentItems: "true"
+  //       };
+
+  //       axios.post('https://graph.microsoft.com/v1.0/users/kevin.pimentel@zhaz.com.br/sendMail', emailBody, {
+  //         headers: {
+  //           Authorization: `${token}`,
+  //           'Content-Type': 'application/json'
+  //         }
+  //       })
+  //         .then(() => toast.success("E-mail enviado com sucesso!"))
+  //         .catch(error => toast.error("Erro ao enviar e-mail:", error.response?.data || error));
+  //     }
+
+
+  //   } catch (error: any) {
+  //     toast.error('Erro inesperado: ' + error.message);
+  //   }
+  // }
